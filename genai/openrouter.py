@@ -30,7 +30,12 @@ class OpenRouter(ChatModel):
             data=json.dumps(payload)
         )
 
-        print(response.json());
+        ai_raw = response.json()
 
-        return response.json()
+        print(ai_raw)
+
+        return {
+            "created": ai_raw.get("created"),
+            "message": ai_raw["choices"][0]["message"]["content"]
+        }
     

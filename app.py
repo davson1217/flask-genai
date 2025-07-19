@@ -1,8 +1,11 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from utils.error_codes import UNSUPPORTED_MEDIA_TYPE, CLIENT_BAD_REQUEST, INTERNAL_SERVER_ERROR, make_response
 from genai.openrouter import OpenRouter
 
 app = Flask(__name__)
+
+CORS(app)
 
 chat_model = OpenRouter()  # default
 
@@ -11,9 +14,10 @@ def require_json():
     if request.method == "POST" and not request.is_json:
         return jsonify({"error": "Request must be json"}), UNSUPPORTED_MEDIA_TYPE
 
-@app.route("/")
-def prompt():
-    return "Hello World"
+
+@app.route("/prompt", methods=["OPTIONS"])
+def handle():
+    return "OK", 200
 
 @app.route("/prompt", methods=["POST"])
 def handle_prompt():
@@ -24,6 +28,7 @@ def handle_prompt():
         return jsonify({"error": "Missing prompt"}), CLIENT_BAD_REQUEST
     
     try:
+        # return "Error", INTERNAL_SERVER_ERROR
         result = chat_model.generate_response(prompt)
 
         return jsonify(result)
