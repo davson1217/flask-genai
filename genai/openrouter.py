@@ -6,12 +6,6 @@ from utils.error_codes import make_response
 
 class OpenRouter(ChatModel):
     def generate_response(self, prompt: str) -> str:
-        hardcoded = "Bearer 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"
-        generated = f"Bearer {OPENROUTER_API_KEY}"
-        
-        print(f"HARDCODED == GENERATED? {hardcoded == generated}")
-        print(f"HARDCODED == {hardcoded}")
-        print(f"GENERATED == {generated}")
 
         headers = {
             "Authorization": "Bearer " + OPENROUTER_API_KEY,
