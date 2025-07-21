@@ -15,6 +15,10 @@ def require_json():
         return jsonify({"error": "Request must be json"}), UNSUPPORTED_MEDIA_TYPE
 
 
+@app.route("/")
+def index():
+    return "Hello stanger"
+
 @app.route("/prompt", methods=["OPTIONS"])
 def handle():
     return "OK", 200
@@ -28,7 +32,6 @@ def handle_prompt():
         return jsonify({"error": "Missing prompt"}), CLIENT_BAD_REQUEST
     
     try:
-        # return "Error", INTERNAL_SERVER_ERROR
         result = chat_model.generate_response(prompt)
 
         return jsonify(result)

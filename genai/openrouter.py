@@ -6,11 +6,17 @@ from utils.error_codes import make_response
 
 class OpenRouter(ChatModel):
     def generate_response(self, prompt: str) -> str:
+        hardcoded = "Bearer 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"
+        generated = f"Bearer {OPENROUTER_API_KEY}"
+        
+        print(f"HARDCODED == GENERATED? {hardcoded == generated}")
+        print(f"HARDCODED == {hardcoded}")
+        print(f"GENERATED == {generated}")
+
         headers = {
-            "Authorization": f"Bearer {OPENROUTER_API_KEY}",
-            "HTTP-Referer": SITE_URL,
-            "X-Title": SITE_NAME,
-            "Content-Type": "application/json"
+            "Authorization": "Bearer " + OPENROUTER_API_KEY,
+            "Content-Type": "application/json",
+            "Accept": "*"
         }
 
         #openai/gpt-4o
@@ -27,12 +33,18 @@ class OpenRouter(ChatModel):
         response = requests.post(
             "https://openrouter.ai/api/v1/chat/completions",
             headers=headers,
-            data=json.dumps(payload)
+            json=payload,
         )
 
         ai_raw = response.json()
 
         print(ai_raw)
+        print(headers)
+        # print(payload)
+
+        if (ai_raw.get("error")):
+            return ai_raw
+        
 
         return {
             "created": ai_raw.get("created"),
